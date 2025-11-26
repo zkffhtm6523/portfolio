@@ -7,6 +7,106 @@
     <title>David — Backend Engineer</title>
 
     <style>
+        /* 라이트박스 오버레이 스타일 */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* 반투명 검은색 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 다른 콘텐츠 위에 표시 */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 라이트박스 콘텐츠 (이미지 및 설명) */
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 80vh; /* 뷰포트 높이의 80% 제한 */
+            display: block;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        .lightbox-content .caption {
+            color: #fff;
+            margin-top: 10px;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        /* 닫기 버튼 */
+        .lightbox-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            color: #ccc;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0 15px;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+            z-index: 1010; /* 이미지 위에 오도록 */
+        }
+
+        .lightbox-nav:hover {
+            opacity: 1;
+        }
+
+        .lightbox-nav.prev {
+            left: 10px;
+        }
+
+        .lightbox-nav.next {
+            right: 10px;
+        }
+
+        /* 모바일 화면에서 화살표 크기 조정 */
+        @media (max-width: 760px) {
+            .lightbox-nav {
+                font-size: 2.5rem;
+                padding: 0 10px;
+            }
+        }
         /* ---------- 기본 (화면) ---------- */
         /* 2단 레이아웃을 위한 Flexbox 컨테이너 */
         .split-content{
@@ -220,6 +320,28 @@
                 margin:8px 0;
             }
             .kpi-row{ flex-direction:column; }
+
+            /* 이 부분이 있어야 가로 스크롤이 생깁니다 */
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* 테이블의 최소 너비를 보장하여 찌그러짐 방지 */
+            .highlight-table {
+                min-width: 600px;
+            }
+            /* [추가] 연락처 정보 모바일 대응 */
+            .contact-info {
+                flex-direction: column; /* 세로로 쌓기 */
+                align-items: flex-start !important; /* 왼쪽 정렬 */
+                gap: 4px; /* 항목 간 간격 */
+            }
+            .contact-info .sep {
+                display: none; /* 모바일에서 구분선(|) 숨기기 */
+            }
         }
 
         /* ---------- 인쇄 최적화 (A4 portrait) - 최종 pg-foot 수정 ---------- */
@@ -417,13 +539,13 @@
         <li class="stack-badge" style="background:#e9ecef; padding:4px 8px; border-radius:4px; color:#343a40;">Docker</li>
     </ul>
 
-    <p style="margin-top:12px; font-size:0.9rem; color:#495057; line-height:1.5;">
-        <strong>Phone : </strong> 010-2532-6523
-        <span style="margin: 0 8px; color: #adb5bd;">|</span>
-        <strong>E-Mail :</strong> zkffhtm6523@gmail.com
-        <span style="margin: 0 8px; color: #adb5bd;">|</span>
-        <strong>Github :</strong> github.com/zkffhtm6523
-    </p>
+    <div class="contact-info" style="margin-top:12px; font-size:0.9rem; color:#495057; line-height:1.5; display:flex; flex-wrap:wrap; align-items:center;">
+        <span><strong>Phone : </strong> 010-2532-6523</span>
+        <span class="sep" style="margin: 0 8px; color: #adb5bd;">|</span>
+        <span><strong>E-Mail :</strong> zkffhtm6523@gmail.com</span>
+        <span class="sep" style="margin: 0 8px; color: #adb5bd;">|</span>
+        <span><strong>Github :</strong> github.com/zkffhtm6523</span>
+    </div>
 
     <div class="pg-foot" style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.85rem; color:#868e96;">
         <div>Backend Engineer_김도빈</div>
@@ -440,66 +562,68 @@
         각 프로젝트명을 클릭하면 상세 내용 페이지로 이동합니다.
     </p>
 
-    <table class="highlight-table" style="width:100%; border-collapse:collapse;">
-        <thead>
-        <tr style="background:#f1f3f5; text-align:left;">
-            <th style="padding:8px; border:1px solid #dee2e6;">프로젝트명</th>
-            <th style="padding:8px; border:1px solid #dee2e6;">프로젝트 기간</th>
-            <th style="padding:8px; border:1px solid #dee2e6;">핵심 내용</th>
-            <th style="padding:8px; border:1px solid #dee2e6;">담당 역할</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><a href="#At-Link-Contract">[에이티링크] 전자계약 시스템</a></td>
-            <td>2025.03 ~ 2025.09</td>
-            <td>분양샵 맞춤형 전자계약 템플릿 설계</td>
-            <td>전체 아키텍처 설계 및 개발</td>
-        </tr>
-        <tr>
-            <td><a href="#At-Link-Infra">[에이티링크] 인프라 아키텍처</a></td>
-            <td>2024.11 ~ 2025.09</td>
-            <td>인프라 아키텍처 내용</td>
-            <td>전체 아키텍처 설계 및 개발</td>
-        </tr>
-        <tr>
-            <td><a href="#Coway-Migration">[코웨이] 휴면회원 통합</a></td>
-            <td>2024.01 ~ 2024.03</td>
-            <td>휴면회원과 일반회원 통합</td>
-            <td>회원 통합 개발</td>
-        </tr>
-        <tr>
-            <td><a href="#Coway-MobileOrder">[코웨이] Kafka 활용한 앱 알림</a></td>
-            <td>2022.11 ~ 2022.12</td>
-            <td>Kafka 기반 Push 시스템 구축</td>
-            <td>Consumer 서버 개발, FCM 연동, 모니터링 연동</td>
-        </tr>
-        <tr>
-            <td><a href="#Coway-ETL">[코웨이] 고객 정보 ETL</a></td>
-            <td>2022.09 ~ 2022.10</td>
-            <td>ETL 파이프라인 구축 및 API 개발</td>
-            <td>ETL 설계, API 개발, 인덱스 최적화</td>
-        </tr>
-        <tr>
-            <td><a href="#Coway-Card">[코웨이] 모바일 명함</a></td>
-            <td>2022.06 ~ 2022.08</td>
-            <td>판매인 정보 연동 모바일 명함 개발</td>
-            <td>백엔드 개발</td>
-        </tr>
-        <tr>
-            <td><a href="#2nd-Service">[세컨신드롬] 서비스 개발 및 운영</a></td>
-            <td>2020.12 ~ 2021.12</td>
-            <td>상담 시스템, 운송 요금, 사전예약 등 서비스 개발</td>
-            <td>백엔드 개발</td>
-        </tr>
-        <tr>
-            <td><a href="#2nd-Infra">[세컨신드롬] 인프라 및 정산 안정화</a></td>
-            <td>2020.12 ~ 2021.12</td>
-            <td>정산 서버 및 인프라 안정화</td>
-            <td>백엔드 개발</td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="highlight-table" style="width:100%; border-collapse:collapse;">
+            <thead>
+            <tr style="background:#f1f3f5; text-align:left;">
+                <th style="padding:8px; border:1px solid #dee2e6;">프로젝트명</th>
+                <th style="padding:8px; border:1px solid #dee2e6;">프로젝트 기간</th>
+                <th style="padding:8px; border:1px solid #dee2e6;">핵심 내용</th>
+                <th style="padding:8px; border:1px solid #dee2e6;">담당 역할</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="#At-Link-Contract">[에이티링크] 전자계약 시스템</a></td>
+                <td>2025.03 ~ 2025.09</td>
+                <td>분양샵 맞춤형 전자계약 템플릿 설계</td>
+                <td>전체 아키텍처 설계 및 개발</td>
+            </tr>
+            <tr>
+                <td><a href="#At-Link-Infra">[에이티링크] 인프라 아키텍처</a></td>
+                <td>2024.11 ~ 2025.09</td>
+                <td>인프라 아키텍처 내용</td>
+                <td>전체 아키텍처 설계 및 개발</td>
+            </tr>
+            <tr>
+                <td><a href="#Coway-Migration">[코웨이] 휴면회원 통합</a></td>
+                <td>2024.01 ~ 2024.03</td>
+                <td>휴면회원과 일반회원 통합</td>
+                <td>회원 통합 개발</td>
+            </tr>
+            <tr>
+                <td><a href="#Coway-MobileOrder">[코웨이] Kafka 활용한 앱 알림</a></td>
+                <td>2022.11 ~ 2022.12</td>
+                <td>Kafka 기반 Push 시스템 구축</td>
+                <td>Consumer 서버 개발, FCM 연동, 모니터링 연동</td>
+            </tr>
+            <tr>
+                <td><a href="#Coway-ETL">[코웨이] 고객 정보 ETL</a></td>
+                <td>2022.09 ~ 2022.10</td>
+                <td>ETL 파이프라인 구축 및 API 개발</td>
+                <td>ETL 설계, API 개발, 인덱스 최적화</td>
+            </tr>
+            <tr>
+                <td><a href="#Coway-Card">[코웨이] 모바일 명함</a></td>
+                <td>2022.06 ~ 2022.08</td>
+                <td>판매인 정보 연동 모바일 명함 개발</td>
+                <td>백엔드 개발</td>
+            </tr>
+            <tr>
+                <td><a href="#2nd-Service">[세컨신드롬] 서비스 개발 및 운영</a></td>
+                <td>2020.12 ~ 2021.12</td>
+                <td>상담 시스템, 운송 요금, 사전예약 등 서비스 개발</td>
+                <td>백엔드 개발</td>
+            </tr>
+            <tr>
+                <td><a href="#2nd-Infra">[세컨신드롬] 인프라 및 정산 안정화</a></td>
+                <td>2020.12 ~ 2021.12</td>
+                <td>정산 서버 및 인프라 안정화</td>
+                <td>백엔드 개발</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="pg-foot" style="margin-top:16px;">
         <div>핵심 성과 요약</div>
@@ -516,7 +640,9 @@
     <h3 style="margin-top: 24px;">1. 분양샵 맞춤형 전자계약 자동화 시스템 설계</h3>
     <p class="small">역할: 전체 아키텍처 설계·관리 화면 및 자동화 흐름 리딩</p>
     <div class="img-placeholder">
-        <img src="resources/2025-atlink-1.png" alt="전자계약 템플릿 PDF 변환 흐름">
+        <a href="resources/2025-atlink-1.png" data-lightbox="2025-atlink-1">
+            <img src="resources/2025-atlink-1.png" alt="이미지 설명">
+        </a>
     </div>
     <h4>배경(Why)</h4>
     <ul>
@@ -555,7 +681,9 @@
         <li>수동 배포로 인한 리드타임 증가</li>
     </ul>
     <div class="img-placeholder">
-        <img src="resources/2025-atlink-2.png" alt="인프라 아키텍처 다이어그램">
+        <a href="resources/2025-atlink-2.png" data-lightbox="2025-atlink-2">
+            <img src="resources/2025-atlink-2.png" alt="이미지 설명">
+        </a>
     </div>
     <h4>접근(How) & 성과(Result)</h4>
     <ul>
@@ -623,7 +751,9 @@
         <li>Coway SDK 및 Datadog를 통한 로그 및 메트릭 모니터링 강화</li>
     </ul>
     <div class="img-placeholder">
-        <img src="resources/2022-coway-3.png" alt="Kafka Push 시스템" style="width: 80%">
+        <a href="resources/2022-coway-3.png" data-lightbox="2022-coway-3">
+            <img src="resources/2022-coway-3.png" alt="Kafka Push 시스템" style="width: 80%">
+        </a>
     </div>
     <h4>성과(Result)</h4>
     <div class="result">
@@ -667,7 +797,9 @@
         </li>
     </ul>
     <div class="img-placeholder">
-        <img src="resources/2022-coway-2.png" alt="ETL 파이프라인">
+        <a href="resources/2022-coway-2.png" data-lightbox="2022-coway-2">
+            <img src="resources/2022-coway-2.png" alt="ETL 파이프라인">
+        </a>
     </div>
     <h4>성과(Result)</h4>
     <div class="result">
@@ -704,7 +836,9 @@
             </ul>
         </div>
         <div class="img-placeholder content-right">
-            <img src="resources/2022-coway-1.webp" alt="모바일 명함">
+            <a href="resources/2022-coway-1.webp" data-lightbox="2022-coway-1">
+                <img src="resources/2022-coway-1.webp" alt="모바일 명함">
+            </a>
         </div>
     </div>
     <h4>성과(Result)</h4>
@@ -736,8 +870,12 @@
 
         <!-- 오른쪽: 이미지 2개 세로 정렬 -->
         <div class="content-right" style="display:flex; flex-direction:column; justify-content:flex-start; gap:12px; margin-top:20px;">
-            <img src="resources/2021-dalock-5-1.webp" alt="preorder" style="width: 200px;">
-            <img src="resources/2021-dalock-5-2.webp" alt="preorder2" style="width: 200px;">
+            <a href="resources/2021-dalock-5-1.webp" data-lightbox="2021-dalock-5">
+                <img src="resources/2021-dalock-5-1.webp" alt="preorder" style="width: 200px;">
+            </a>
+            <a href="resources/2021-dalock-5-2.webp" data-lightbox="2021-dalock-5">
+                <img src="resources/2021-dalock-5-2.webp" alt="preorder2" style="width: 200px;">
+            </a>
         </div>
     </div>
 
@@ -754,7 +892,9 @@
 
         <!-- 오른쪽: 이미지 2개 세로 정렬 -->
         <div class="content-right" style="display:flex; flex-direction:column; justify-content:flex-start; gap:12px; margin-top:40px;">
-            <img src="resources/2021-dalock-4.webp" alt="AWS 3티어 전환 다이어그램" style="max-width:100%; width:400px;">
+            <a href="resources/2021-dalock-4.webp" data-lightbox="2021-dalock-4">
+                <img src="resources/2021-dalock-4.webp" alt="AWS 3티어 전환 다이어그램" style="max-width:100%; width:400px;">
+            </a>
         </div>
     </div>
 
@@ -770,7 +910,9 @@
         </div>
 
         <div class="content-right" style="display:flex; flex-direction:column; justify-content:flex-start; gap:12px; margin-top:40px;">
-            <img src="resources/2021-dalock-3.webp" alt="네이버 지도" style="max-width:100%; width:400px;">
+            <a href="resources/2021-dalock-3.webp" data-lightbox="2021-dalock-3">
+                <img src="resources/2021-dalock-3.webp" alt="네이버 지도" style="max-width:100%; width:400px;">
+            </a>
         </div>
     </div>
 
@@ -803,7 +945,9 @@
         <li>DB Polling 기반 설치형 메시징 모듈이 지연·부하 문제를 지속적으로 유발</li>
     </ul>
     <div class="img-placeholder">
-        <img src="resources/2021-dalock-1.webp" alt="AWS 3티어 전환 다이어그램">
+        <a href="resources/2021-dalock-1.webp" data-lightbox="2021-dalock-1">
+            <img src="resources/2021-dalock-1.webp" alt="AWS 3티어 전환 다이어그램">
+        </a>
     </div>
     <h4>접근(How) & 성과(Result)</h4>
     <ul>
@@ -828,6 +972,97 @@
             // '페이지 N / T' 형식으로 업데이트
             if(el) el.textContent = `페이지 ${idx+1} / ${total}`;
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightboxOverlay = document.createElement('div');
+        lightboxOverlay.classList.add('lightbox-overlay');
+        document.body.appendChild(lightboxOverlay);
+
+        const lightboxContent = document.createElement('div');
+        lightboxContent.classList.add('lightbox-content');
+        lightboxOverlay.appendChild(lightboxContent);
+
+        const currentImage = document.createElement('img');
+        const imageCaption = document.createElement('p');
+        imageCaption.classList.add('caption');
+
+        const closeButton = document.createElement('button');
+        closeButton.classList.add('lightbox-close');
+        closeButton.innerHTML = '&times;';
+        lightboxOverlay.appendChild(closeButton);
+
+        const prevButton = createNavButton('prev', '&#10094;');
+        const nextButton = createNavButton('next', '&#10095;');
+        lightboxOverlay.appendChild(prevButton);
+        lightboxOverlay.appendChild(nextButton);
+
+        lightboxContent.appendChild(currentImage);
+        lightboxContent.appendChild(imageCaption);
+
+        let currentGroup = [];
+        let currentIndex = -1;
+
+        function createNavButton(direction, icon) {
+            const button = document.createElement('button');
+            button.classList.add('lightbox-nav', direction);
+            button.innerHTML = icon;
+            return button;
+        }
+
+        function updateImage(index) {
+            if (index >= 0 && index < currentGroup.length) {
+                const link = currentGroup[index];
+                const largeImageSrc = link.getAttribute('href');
+                const captionText = link.getAttribute('title') || '';
+
+                currentImage.src = largeImageSrc;
+                imageCaption.textContent = captionText;
+                currentIndex = index;
+
+                // 그룹이 하나일 때는 화살표 숨기기
+                if (currentGroup.length <= 1) {
+                    prevButton.style.display = 'none';
+                    nextButton.style.display = 'none';
+                } else {
+                    prevButton.style.display = (currentIndex === 0) ? 'none' : 'block';
+                    nextButton.style.display = (currentIndex === currentGroup.length - 1) ? 'none' : 'block';
+                }
+            }
+        }
+
+        function openLightbox(groupName, link) {
+            currentGroup = Array.from(document.querySelectorAll(`[data-lightbox="${groupName}"]`));
+            const initialIndex = currentGroup.indexOf(link);
+            updateImage(initialIndex);
+            lightboxOverlay.classList.add('active');
+        }
+
+        function navigate(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < currentGroup.length) {
+                updateImage(newIndex);
+            }
+        }
+
+        // 이벤트 리스너 설정
+        document.querySelectorAll('[data-lightbox]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const groupName = link.getAttribute('data-lightbox');
+                openLightbox(groupName, link);
+            });
+        });
+
+        closeButton.addEventListener('click', () => lightboxOverlay.classList.remove('active'));
+        lightboxOverlay.addEventListener('click', (e) => {
+            if (e.target === lightboxOverlay) { // 오버레이 자체를 클릭했을 때만 닫기
+                lightboxOverlay.classList.remove('active');
+            }
+        });
+
+        prevButton.addEventListener('click', () => navigate(-1));
+        nextButton.addEventListener('click', () => navigate(1));
     });
 </script>
 
