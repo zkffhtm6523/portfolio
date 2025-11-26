@@ -387,7 +387,11 @@
                 min-height: auto !important;
                 display: block !important;
             }
-
+            /* [최종 해결책] 모든 링크 상태의 색상과 밑줄을 강제로 지정 */
+            a:link, a:visited, a:hover, a:active {
+                color: #007bff !important; /* 링크 색상 (파란색) */
+                text-decoration: none !important; /* 밑줄 없음 */
+            }
             /* [핵심 수정] pg-foot을 sheet의 바닥에 절대 위치로 고정 */
             .pg-foot {
                 position: absolute !important;
