@@ -8,7 +8,6 @@
 
     <style>
         /* ---------- 기본 (화면) ---------- */
-        /* 기술 스택 배지 스타일 */
         /* 2단 레이아웃을 위한 Flexbox 컨테이너 */
         .split-content{
             display:flex;
@@ -30,7 +29,6 @@
             max-width: 100%;
             height: auto;
             /* 모바일 명함처럼 좁은 이미지는 이 최대 너비로 제한 */
-            max-width: 200px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
@@ -79,7 +77,8 @@
         }
         html,body{height:100%;}
         body{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* [1페이지 기준] 글꼴 통일 (인라인 스타일에서 가져옴) */
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', Roboto, sans-serif;
             background:#f8f9fa; color:#333; margin:0; padding:0; line-height:1.6;
         }
 
@@ -94,17 +93,15 @@
             page-break-after: always; /* 인쇄용 분리 */
             overflow:hidden;
             box-sizing:border-box;
+
+            /* [유지] pg-foot의 기준 위치 설정을 위해 position: relative 유지 */
+            position: relative;
+
+            min-height: auto;
+            max-height: none;
+            height: auto;
         }
 
-        /* cover-header: 첫 페이지(시트) 안에서만 사용되는 헤더 스타일 */
-        .cover-header{
-            background:var(--dark-header);
-            color:#fff;
-            text-align:center;
-            padding:20px;
-            border-radius:6px;
-            margin-bottom:14px;
-        }
         .cover-header h1{margin:0; font-size:1.6rem;}
         .cover-header p{margin:6px 0 0; color:#adb5bd; font-size:0.95rem;}
 
@@ -118,13 +115,15 @@
         .muted{color:var(--muted);}
         ul{padding-left:1.5rem; margin-top:0.4rem;}
         li{margin-bottom:0.45rem;}
-        .small{font-size:0.93rem; color:var(--muted);}
+
+        /* [1페이지 기준] KPI 상세 설명에 맞춰서 .small 폰트 크기 통일 */
+        .small{font-size:0.85rem; color:var(--muted);}
 
         .kpi-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;}
         .kpi{ background:#f3faf8; border:1px solid rgba(14,165,164,0.08); padding:10px; border-radius:8px; min-width:200px; flex:1; box-sizing:border-box;}
         .kpi strong{display:block; font-size:1.02rem; color:#0f172a; margin-bottom:6px;}
 
-        /* [수정] img-placeholder 스타일 */
+        /* img-placeholder 스타일 */
         .img-placeholder{
             /* float 대신 flexbox를 사용하여 오른쪽 정렬 */
             display: flex;
@@ -142,7 +141,6 @@
             border-radius: 6px; /* 이미지 자체에 둥근 모서리 적용 */
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 이미지에 그림자 추가 */
         }
-        /* / [수정] img-placeholder 스타일 */
 
         .result{
             margin-top:10px;
@@ -152,9 +150,14 @@
         }
 
         .pg-foot{
-            margin-top:14px; font-size:13px; color:var(--muted);
+            font-size:13px; color:var(--muted);
             border-top:1px solid rgba(0,0,0,0.04); padding-top:10px;
             display:flex; justify-content:space-between; align-items:center;
+
+            margin-top: 14px;
+
+            /* [추가] 푸터 높이 추정값 (border-top + padding-top + 텍스트 높이) */
+            height: 30px;
         }
 
         /* 이미지 오버플로우 방지 및 원형 크롭 */
@@ -172,7 +175,6 @@
         .highlight-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 전체 폰트와 일치 */
             font-size: 0.95rem;
         }
 
@@ -185,6 +187,7 @@
 
         .highlight-table th {
             background-color: #f1f3f5;
+            text-align: center;
         }
 
         /* 프로젝트명과 기간이 줄바꿈되지 않도록 */
@@ -193,18 +196,17 @@
             white-space: nowrap;
         }
         .highlight-table a {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 전체 폰트와 맞춤 */
-            font-weight: normal; /* 너무 진하지 않게 */
-            color: #007bff; /* 검은색 계열로 통일 */
-            text-decoration: none; /* 밑줄 제거 */
+            font-weight: normal;
+            color: #007bff;
+            text-decoration: none;
         }
 
         .highlight-table a:hover {
-            color: #0056b3; /* 호버 시 포인트 색 */
-            text-decoration: underline; /* 필요하면 호버 시 밑줄 */
+            color: #0056b3;
+            text-decoration: underline;
         }
         .highlight-table a:visited {
-            color: #007bff; /* 방문한 링크도 원래 색 유지 */
+            color: #007bff;
         }
 
 
@@ -213,14 +215,14 @@
             .sheet{ margin:12px; padding:14px; }
             .img-placeholder{
                 width:70%;
-                display: flex; /* 모바일에서도 flexbox 유지 */
-                justify-content: center; /* 가운데 정렬 */
+                display: flex;
+                justify-content: center;
                 margin:8px 0;
             }
             .kpi-row{ flex-direction:column; }
         }
 
-        /* ---------- 인쇄 최적화 (A4 portrait) - 상단 여백 추가 수정 및 1페이지 높이 강제 ---------- */
+        /* ---------- 인쇄 최적화 (A4 portrait) - 최종 pg-foot 수정 ---------- */
         @page { size: A4 portrait; margin: 10mm; }
         @media print {
             * {
@@ -238,28 +240,51 @@
             }
 
             .sheet{
-                width: 190mm; /* A4 width minus margins (210mm - 2*10mm) */
-                margin: 0 auto;
-                /* *************** 이 부분을 수정합니다. *************** */
-                padding: 10mm; /* 인쇄 시 내부 여백을 16mm에서 10mm로 줄여서 높이 공간 확보 */
-                /* *************************************************** */
+                /* [핵심 수정] absolute 기준을 위해 position: relative 유지 */
+                position: relative !important;
+
+                /* [유지] A4 용지 내 사용 가능 영역 100% 사용 및 마진 0 강제 */
+                width: 100% !important;
+                margin: 0 !important;
+
+                /* [유지] 인쇄 시 여백을 5mm로 줄여서 페이지가 넘치는 것을 방지 */
+                padding: 5mm !important;
                 box-shadow: none;
                 border-radius: 0;
 
-                /* [핵심] 페이지 구분 강제 및 분할 방지 강화 */
+                /* [핵심] 푸터 높이만큼 하단 패딩을 추가하여 내용과 겹치지 않도록 공간 확보 */
+                /* 5mm(기존) + 30px(약 8mm, 푸터 높이) + 5mm(안전 마진) = 약 18mm */
+                padding-bottom: 18mm !important;
+
+                /* [수정] 모든 section 뒤에 강제 페이지 나누기 유지 */
                 page-break-after: always;
                 page-break-inside: avoid !important;
-                -webkit-box-shadow: none;
 
-                /* 높이 강제 지정 제거 */
+                /* 높이 설정을 제거하여 내용의 흐름을 방해하지 않음 */
                 height: auto !important;
-                min-height: 0 !important;
+                min-height: auto !important;
                 display: block !important;
             }
 
-            /* 마지막 페이지에는 page-break-after를 적용하지 않음 */
+            /* [핵심 수정] pg-foot을 sheet의 바닥에 절대 위치로 고정 */
+            .pg-foot {
+                position: absolute !important;
+                bottom: 5mm !important; /* sheet의 기존 padding-bottom 위치에 고정 */
+                left: 5mm !important; /* sheet의 padding-left와 동일 */
+                right: 5mm !important; /* sheet의 padding-right와 동일 */
+
+                page-break-before: avoid !important;
+
+                display: flex !important;
+                justify-content:space-between;
+                align-items:center;
+
+                margin-top:0 !important;
+            }
+
+            /* [핵심 수정] 마지막 페이지의 강제 페이지 나누기만 해제 */
             .sheet:last-of-type {
-                page-break-after: auto;
+                page-break-after: auto !important;
             }
 
             /* 첫 번째 .sheet 요소에는 page-break-before를 적용하지 않습니다. */
@@ -270,16 +295,15 @@
 
             /* 2페이지 이후의 상단 여백 문제 해결을 위해, padding-top 통일 */
             section[aria-label="Highlights"] {
-                padding-top: 10mm !important; /* sheet의 padding-top과 일치 */
+                padding-top: 5mm !important;
             }
 
-            /* [핵심] 컨텐츠 플로우 컨트롤: 개별 요소가 페이지 분할의 상단에 걸리는 것을 방지 */
+            /* [유지] 컨텐츠 플로우 컨트롤 */
             .sheet h2, .sheet h3, .sheet h4,
             .sheet p, .sheet ul, .sheet ol,
             .sheet .split-content,
             .sheet .img-placeholder,
             .sheet .result,
-            .sheet .pg-foot,
             .kpi-row,
             .highlight-table {
                 page-break-inside: avoid !important;
@@ -298,13 +322,10 @@
                 background:var(--dark-header);
             }
 
-            .pg-foot {
-                display:flex !important;
-                page-break-inside: avoid;
-            }
-
             h2{ font-size:1.2rem; }
-            .small{ font-size:0.9rem; }
+
+            /* [1페이지 기준] KPI 기준으로 인쇄 시 .small 폰트 크기 통일 */
+            .small{ font-size:0.85rem; }
 
             /* ===== PAGE 2 전용 테이블 스타일 ===== */
             section[aria-label="Highlights"] table {
@@ -316,6 +337,10 @@
             section[aria-label="Highlights"] td {
                 border: 1px solid #dee2e6;
                 padding: 6px 8px;
+            }
+
+            section[aria-label="Highlights"] th {
+                text-align: center !important;
             }
 
             section[aria-label="Highlights"] a {
@@ -354,28 +379,28 @@
             <div class="small" style="text-align: left; margin-top: 4px; font-size: 0.85rem; color: #6c757d; line-height: 1.4;">클라우드 네이티브 (CloudWatch, Datadog) 및 오픈소스 (Prometheus, Grafana) 기반의 모니터링 체계를 구축하고, 핵심 메트릭 및 에러 추적 알림 시스템을 수립하여 운영 안정성을 확보</div>
         </div>
         <div class="kpi" style="min-width: 100%; flex: none; display: flex; flex-direction: column; align-items: flex-start; padding: 8px 12px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #007bff;">
-            <strong style="margin:0;">운임 관련 고객 클레임 100% 제거</strong>
-            <div class="small" style="text-align: left; margin-top: 4px; font-size: 0.85rem; color: #6c757d; line-height: 1.4;">기존의 일직선 거리 산출 문제를 해결하기 위해 네이버 지도 API 최적 경로를 연동, 운송 비용 산출 정확도를 개선하여 관련 고객 클레임을 성공적으로 해소</div>
-        </div>
-        <div class="kpi" style="min-width: 100%; flex: none; display: flex; flex-direction: column; align-items: flex-start; padding: 8px 12px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #007bff;">
             <strong style="margin:0;">핵심 API 응답 속도 80% 이상 개선</strong>
             <div class="small" style="text-align: left; margin-top: 4px; font-size: 0.85rem; color: #6c757d; line-height: 1.4;">700만 건 규모의 DB에서 복합 인덱스 설계 및 쿼리 튜닝을 통해 대용량 고객 정보 조회 API의 응답 속도를 0.5초 이내로 단축하여 실시간 사용자 경험을 개선</div>
+        </div>
+        <div class="kpi" style="min-width: 100%; flex: none; display: flex; flex-direction: column; align-items: flex-start; padding: 8px 12px; background-color: #f8f9fa; border-radius: 5px; border-left: 5px solid #007bff;">
+            <strong style="margin:0;">운임 관련 고객 클레임 100% 제거</strong>
+            <div class="small" style="text-align: left; margin-top: 4px; font-size: 0.85rem; color: #6c757d; line-height: 1.4;">기존의 일직선 거리 산출 문제를 해결하기 위해 네이버 지도 API 최적 경로를 연동, 운송 비용 산출 정확도를 개선하여 관련 고객 클레임을 성공적으로 해소</div>
         </div>
     </div>
 
     <h3 style="margin-top:22px; border-bottom: 2px solid #e9ecef; padding-bottom: 5px; margin-bottom: 15px; color:#343a40;">주요 경력 스냅샷</h3>
     <ul style="padding-left:0; list-style:none; color:#495057; font-size:0.95rem; margin-top: 10px;">
         <li style="margin-bottom: 12px; line-height: 1.5;">
-            <strong style="color:#343a40;">에이티링크</strong> (2024.09 ~ 2025.09)
-            <span style="display: block; margin-top: 2px; color:#495057;">반려동물 플랫폼 핵심 아키텍처 설계 및 클라우드 인프라 구축에 기여 .</span>
+            <strong style="color:#343a40;">에이티링크</strong> <span style="font-weight: normal; color: #495057;">(2024.09 ~ 2025.09)</span>
+            <span style="display: block; margin-top: 2px; margin-left: 15px; color:#6c757d; font-size: 0.9rem; line-height: 1.4;">반려동물 플랫폼 핵심 아키텍처 설계 및 클라우드 인프라 구축에 기여</span>
         </li>
         <li style="margin-bottom: 12px; line-height: 1.5;">
-            <strong style="color:#343a40;">코웨이</strong> (2022.01 ~ 2024.07)
-            <span style="display: block; margin-top: 2px; color:#495057;">140만 고객 대상의 통합 회원/인증 서비스 개발에 참여하고, Kafka 기반 실시간 이벤트 처리 모듈 및 대용량 배치 시스템 구현을 통해 시스템 안정화에 기여 .</span>
+            <strong style="color:#343a40;">코웨이</strong> <span style="font-weight: normal; color: #495057;">(2022.01 ~ 2024.07)</span>
+            <span style="display: block; margin-top: 2px; margin-left: 15px; color:#6c757d; font-size: 0.9rem; line-height: 1.4;">140만 고객 대상의 통합 회원/인증 서비스 개발 참여, Kafka 기반 실시간 이벤트 처리 모듈 및 대용량 배치 시스템 구현을 통해 시스템 안정화에 기여</span>
         </li>
         <li style="margin-bottom: 12px; line-height: 1.5;">
-            <strong style="color:#343a40;">세컨신드롬</strong> (2020.12 ~ 2021.12)
-            <span style="display: block; margin-top: 2px; color:#495057;">스토리지 플랫폼 핵심 아키텍처 설계 및 클라우드 인프라 구축에 기여 .</span>
+            <strong style="color:#343a40;">세컨신드롬</strong> <span style="font-weight: normal; color: #495057;">(2020.12 ~ 2021.12)</span>
+            <span style="display: block; margin-top: 2px; margin-left: 15px; color:#6c757d; font-size: 0.9rem; line-height: 1.4;">스토리지 플랫폼 핵심 아키텍처 설계 및 클라우드 인프라 구축에 기여</span>
         </li>
     </ul>
 
