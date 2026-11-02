@@ -344,6 +344,36 @@
             }
         }
 
+        /* ---------- 페이지 이동 리모컨 (화면 전용, 인쇄 시 숨김) ---------- */
+        .page-nav{
+            position:fixed; right:20px; top:50%; transform:translateY(-50%);
+            z-index:900; width:200px; max-height:calc(100vh - 40px); overflow-y:auto;
+            background:#fff; border:1px solid #dee2e6; border-radius:8px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.08);
+            font-size:0.8rem; line-height:1.35;
+        }
+        .page-nav-toggle{
+            display:flex; justify-content:space-between; align-items:center; width:100%;
+            padding:8px 12px; border:0; background:none; cursor:pointer;
+            font:inherit; font-weight:700; color:#343a40;
+        }
+        .page-nav ol{list-style:none; margin:0; padding:0 0 6px;}
+        .page-nav li{margin:0;}
+        .page-nav .nav-group{padding:8px 12px 2px; font-size:0.72rem; font-weight:700; color:var(--muted);}
+        .page-nav a{
+            display:block; padding:4px 12px 4px 10px; border-left:2px solid transparent;
+            color:#495057; text-decoration:none;
+        }
+        .page-nav a:hover{background:#f1f6ff;}
+        .page-nav a.active{border-left-color:var(--accent); color:var(--accent); font-weight:700; background:#f1f6ff;}
+        .page-nav .nav-num{display:inline-block; width:20px; color:#adb5bd;}
+        .page-nav.collapsed{width:auto;}
+        .page-nav.collapsed ol{display:none;}
+        .page-nav.collapsed .page-nav-toggle{gap:8px;}
+        @media (max-width:760px){
+            .page-nav{top:auto; bottom:16px; right:16px; transform:none;}
+        }
+
         /* ---------- 인쇄 최적화 (A4 portrait) - 최종 pg-foot 수정 ---------- */
         @page { size: A4 portrait; margin: 10mm; }
         @media print {
@@ -523,6 +553,11 @@
                 line-height: 1.35;
             }
 
+            /* 리모컨은 인쇄하지 않음 */
+            .page-nav {
+                display: none !important;
+            }
+
             /* 상세 페이지 */
             .sheet h3 {
                 margin-top: 14px !important;
@@ -537,7 +572,7 @@
 <body>
 
 <!-- ===== PAGE 1 (헤더 포함) ===== -->
-<section class="sheet" aria-label="Cover" style="padding: 20px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', Roboto, sans-serif; color: #212529;">
+<section class="sheet" id="Cover" data-nav="표지" aria-label="Cover" style="padding: 20px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', Roboto, sans-serif; color: #212529;">
     <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
         <div class="profile-img-container" style="flex-shrink:0; width:140px; height:140px; border-radius:70px; border:2px solid #dee2e6; background:#f8f9fa;">
             <img src="resources/david-image.jpg" alt="프로필 사진" style="width:100%; height:100%; border-radius:70px; object-fit: cover;">
@@ -625,7 +660,7 @@
 
 
 <!-- ===== PAGE 2 ===== -->
-<section class="sheet" aria-label="Highlights">
+<section class="sheet" id="Highlights" data-nav="핵심 성과 요약" aria-label="Highlights">
     <h2>핵심 성과 요약</h2>
     <p class="small" style="margin-bottom:16px; margin-top:12px;">
         아래 표는 포트폴리오에 포함된 프로젝트를 최신 순으로 정리한 핵심 성과 요약입니다.
@@ -748,7 +783,7 @@
 </section>
 
 <!--라이드 - 실시간 AI 콜센터-->
-<section class="sheet" id="Ride-CTI" aria-label="Ride - CTI">
+<section class="sheet" id="Ride-CTI" data-nav-group="라이드" data-nav="실시간 AI 콜센터" aria-label="Ride - CTI">
     <h2>[라이드] 실시간 AI 콜센터 및 업무 자동화</h2>
     <p class="muted">기간: 2026.01 ~ 재직 중</p>
 
@@ -784,7 +819,7 @@
     </div>
 </section>
 <!--라이드 - 법정검사 사후정산-->
-<section class="sheet" id="Ride-Settlement" aria-label="Ride - Settlement">
+<section class="sheet" id="Ride-Settlement" data-nav-group="라이드" data-nav="법정검사 사후정산" aria-label="Ride - Settlement">
     <h3 style="margin-top: 24px;">2. 법정검사 사후정산 자동화</h3>
     <p class="small">기간: 2026.04 ~ 2026.06</p>
     <p class="small">기술: Kotlin, Spring Boot, Amazon Bedrock(Claude Sonnet), Android SMS 연동</p>
@@ -814,7 +849,7 @@
 </section>
 
 <!--에이티링크 - 전자계약 시스템-->
-<section class="sheet" id="At-Link-Contract" aria-label="Ateilink - Contract & Infra">
+<section class="sheet" id="At-Link-Contract" data-nav-group="에이티링크" data-nav="전자계약 시스템" aria-label="Ateilink - Contract & Infra">
     <h2>[에이티링크] 전자계약 시스템 설계 및 인프라 구축</h2>
     <p class="muted">기간: 2024.09 ~ 2025.09 | 기술: Kotlin, Spring Boot, Svelte, GitHub Actions, Python, EC2, VPC, Sentry</p>
 
@@ -853,7 +888,7 @@
     </div>
 </section>
 <!--에이티링크 - 인프라 구축-->
-<section class="sheet" id="At-Link-Infra" aria-label="Ateilink - Infra">
+<section class="sheet" id="At-Link-Infra" data-nav-group="에이티링크" data-nav="인프라 아키텍처" aria-label="Ateilink - Infra">
     <!-- 2. 인프라 재설계 및 관측성 -->
     <h3 style="margin-top: 24px;">2. 인프라 아키텍처 설계 및 구축</h3>
     <h4>배경(Why)</h4>
@@ -882,7 +917,7 @@
 </section>
 
 <!--코웨이 - 회원 통합-->
-<section class="sheet" id="Coway-Migration" aria-label="Coway - Migration">
+<section class="sheet" id="Coway-Migration" data-nav-group="코웨이" data-nav="휴면회원 통합" aria-label="Coway - Migration">
     <h2>[코웨이] 통합회원/인증 프로젝트</h2>
     <p class="muted">기간: 2023.06 ~ 2024.07 | 기술: Kotlin, Java, Spring Boot, Spring Batch, AWS DMS, Datadog</p>
 
@@ -917,7 +952,7 @@
     </div>
 </section>
 <!--코웨이 - 모바일 주문-->
-<section class="sheet" id="Coway-MobileOrder" aria-label="Coway - Mobile Order">
+<section class="sheet" id="Coway-MobileOrder" data-nav-group="코웨이" data-nav="Kafka 앱 알림" aria-label="Coway - Mobile Order">
     <h2>[코웨이] 디지털 전환 프로젝트</h2>
     <p class="muted">기간: 2022.01 ~ 2022.12 | 기술: Kotlin, Java, Spring Boot, MSK(Kafka), BigQuery, FCM</p>
     <h3>1. Kafka 기반 모바일 주문 App Push 시스템</h3>
@@ -951,7 +986,7 @@
     </div>
 </section>
 <!--코웨이 전화알림 ETL-->
-<section class="sheet" id="Coway-ETL" aria-label="Coway - ETL">
+<section class="sheet" id="Coway-ETL" data-nav-group="코웨이" data-nav="고객 정보 ETL" aria-label="Coway - ETL">
     <h3 style="margin-top: 24px;">2. 실시간 고객 정보 제공을 위한 데이터 ETL 구축</h3>
     <p class="small">역할: 데이터 추출 이후 데이터 로드 전략 수립 및 API 개발 </p>
 
@@ -998,7 +1033,7 @@
     </div>
 </section>
 <!--코웨이 - 모바일 명함-->
-<section class="sheet" id="Coway-Card" aria-label="Coway - Card">
+<section class="sheet" id="Coway-Card" data-nav-group="코웨이" data-nav="모바일 명함" aria-label="Coway - Card">
     <h3 style="margin-top: 24px;">3. 모바일 명함 & 캐시 최적화</h3>
     <div class="split-content">
         <div class="content-left">
@@ -1032,7 +1067,7 @@
 </section>
 
 <!--세컨신드롬 - 서비스-->
-<section class="sheet" id="2nd-Service" aria-label="SecondSyndrome - Service">
+<section class="sheet" id="2nd-Service" data-nav-group="세컨신드롬" data-nav="서비스 개발" aria-label="SecondSyndrome - Service">
     <h2>[세컨신드롬] 핵심 비즈니스 기능 개발 및 개선</h2>
     <p class="muted">기간: 2020.12 ~ 2021.12 | 기술: Java, Spring Boot, MySQL, AWS(EC2,RDS,S3,ECR), Docker</p>
 
@@ -1104,7 +1139,7 @@
     </div>
 </section>
 <!--세컨신드롬 - 인프라 및 안정화-->
-<section class="sheet" id="2nd-Infra" aria-label="SecondSyndrome - Infra">
+<section class="sheet" id="2nd-Infra" data-nav-group="세컨신드롬" data-nav="인프라·정산 안정화" aria-label="SecondSyndrome - Infra">
     <h2>[세컨신드롬] 인프라 구축 및 핵심 비즈니스 기능 안정화</h2>
     <p class="muted">기간: 2020.12 ~ 2021.12 | 기술: Java, Spring Boot, MySQL, AWS(EC2,RDS,S3,ECR), Docker</p>
 
@@ -1144,7 +1179,7 @@
 </section>
 
 <!--사이드 프로젝트 1-->
-<section class="sheet" id="side-project-1" aria-label="SideProject - 1">
+<section class="sheet" id="side-project-1" data-nav-group="사이드 프로젝트" data-nav="AllWebtoon · MindMood" aria-label="SideProject - 1">
     <h2>2026 사이드 프로젝트</h2>
     <p class="muted">기간: 2026.04 ~ 2026.05 | 기술: Claude Code, React, Next.js, Supabase, Vercel</p>
 
@@ -1179,7 +1214,7 @@
     </div>
 </section>
 <!--사이드 프로젝트 2-->
-<section class="sheet" id="side-project-2" aria-label="SideProject - 2">
+<section class="sheet" id="side-project-2" data-nav-group="사이드 프로젝트" data-nav="PCria" aria-label="SideProject - 2">
     <h2>2026 사이드 프로젝트</h2>
     <p class="muted">기간: 2026.04 ~ 2026.05 | 기술: Claude Code, React, Next.js, Supabase, Vercel</p>
 
@@ -1213,6 +1248,68 @@
             // '페이지 N / T' 형식으로 업데이트
             if(el) el.textContent = `페이지 ${idx+1} / ${total}`;
         });
+    });
+
+    /* 페이지 이동 리모컨: data-nav가 붙은 sheet로 목차를 만들고 현재 페이지를 표시 */
+    document.addEventListener('DOMContentLoaded', () => {
+        const sheets = Array.from(document.querySelectorAll('.sheet[data-nav]'));
+        if (!sheets.length) return;
+
+        const nav = document.createElement('nav');
+        nav.className = 'page-nav';
+        nav.setAttribute('aria-label', '페이지 이동');
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'page-nav-toggle';
+        toggle.innerHTML = '<span>목차</span><span class="nav-arrow"></span>';
+        nav.appendChild(toggle);
+
+        const list = document.createElement('ol');
+        const links = new Map();
+        let prevGroup = null;
+        sheets.forEach((s, idx) => {
+            const group = s.dataset.navGroup || null;
+            if (group && group !== prevGroup) {
+                const g = document.createElement('li');
+                g.className = 'nav-group';
+                g.textContent = group;
+                list.appendChild(g);
+            }
+            prevGroup = group;
+
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#' + s.id;
+            a.innerHTML = `<span class="nav-num">${idx + 1}</span>${s.dataset.nav}`;
+            li.appendChild(a);
+            list.appendChild(li);
+            links.set(s, a);
+        });
+        nav.appendChild(list);
+        document.body.appendChild(nav);
+
+        // 좁은 화면에서는 본문을 가리지 않도록 접힌 상태로 시작
+        const setCollapsed = (v) => {
+            nav.classList.toggle('collapsed', v);
+            toggle.querySelector('.nav-arrow').textContent = v ? '▸' : '▾';
+            toggle.setAttribute('aria-expanded', String(!v));
+        };
+        setCollapsed(window.innerWidth < 1360);
+        toggle.addEventListener('click', () => setCollapsed(!nav.classList.contains('collapsed')));
+        list.addEventListener('click', (e) => {
+            if (e.target.closest('a') && window.innerWidth < 1360) setCollapsed(true);
+        });
+
+        // 화면 가운데를 지나는 sheet를 현재 페이지로 표시
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                links.forEach((a) => a.classList.remove('active'));
+                links.get(entry.target).classList.add('active');
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        sheets.forEach((s) => observer.observe(s));
     });
 
     document.addEventListener('DOMContentLoaded', () => {
