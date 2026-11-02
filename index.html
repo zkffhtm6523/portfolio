@@ -171,7 +171,7 @@
         }
         :root{
             --dark-header: #343a40;
-            --accent: #0ea5a4;
+            --accent: #007bff;
             --muted: #6c757d;
             --sheet-bg: #fff;
         }
@@ -220,7 +220,7 @@
         .small{font-size:0.85rem; color:var(--muted);}
 
         .kpi-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;}
-        .kpi{ background:#f3faf8; border:1px solid rgba(14,165,164,0.08); padding:10px; border-radius:8px; min-width:200px; flex:1; box-sizing:border-box;}
+        .kpi{ background:#f8f9fa; border:1px solid rgba(0,123,255,0.08); padding:10px; border-radius:8px; min-width:200px; flex:1; box-sizing:border-box;}
         .kpi strong{display:block; font-size:1.02rem; color:#0f172a; margin-bottom:6px;}
 
         /* img-placeholder 스타일 */
@@ -246,7 +246,7 @@
             margin-top:10px;
             margin-bottom:20px;
             padding:10px 12px; border-left:4px solid var(--accent);
-            background:#f3faf8; color:#06423a; font-weight:700; border-radius:6px;
+            background:#f1f6ff; color:#0b3a75; font-weight:700; border-radius:6px;
         }
 
         .pg-foot{
@@ -586,6 +586,18 @@
             </thead>
             <tbody>
             <tr>
+                <td><a href="#Ride-CTI">[라이드] 실시간 AI 콜센터</a></td>
+                <td>2026.08 ~ 진행 중</td>
+                <td>상용 AICC 임대를 자체 구축으로 전환</td>
+                <td>테크 리드 · 전 구간 설계 및 구축</td>
+            </tr>
+            <tr>
+                <td><a href="#Ride-Settlement">[라이드] 법정검사 사후정산 자동화</a></td>
+                <td>2026.04 ~ 2026.06</td>
+                <td>영수증 판독부터 이체 확인까지 자동화</td>
+                <td>전체 설계 및 개발</td>
+            </tr>
+            <tr>
                 <td><a href="#At-Link-Contract">[에이티링크] 전자계약 시스템</a></td>
                 <td>2025.03 ~ 2025.09</td>
                 <td>분양샵 맞춤형 전자계약 템플릿 설계</td>
@@ -652,7 +664,7 @@
             <tbody>
             <tr>
                 <td><a href="#side-project-1">Allwebtoon</a></td>
-                <td>2026.04 ~ 2025.05</td>
+                <td>2026.04 ~ 2026.05</td>
                 <td>웹툰 추천 및 정보 사이트</td>
                 <td>전체 아키텍처 설계 및 개발</td>
             </tr>
@@ -674,6 +686,72 @@
     <div class="pg-foot" style="margin-top:16px;">
         <div>핵심 성과 요약</div>
         <div class="page-num-placeholder">페이지 2 / 7</div>
+    </div>
+</section>
+
+<!--라이드 - 실시간 AI 콜센터-->
+<section class="sheet" id="Ride-CTI" aria-label="Ride - CTI">
+    <h2>[라이드] 실시간 AI 콜센터 및 업무 자동화</h2>
+    <p class="muted">기간: 2026.01 ~ 재직 중</p>
+
+    <h3 style="margin-top: 24px;">1. 실시간 AI 콜센터 자체 구축</h3>
+    <p class="small">기간: 2026.08 ~ 진행 중 | 역할: 테크 리드 · CTI 전체 아키텍처 설계 · Telephony·Core·Media-Relay·인프라 구축 · 상담원 콘솔·SDK 설계 (구현은 동료 개발자)</p>
+    <p class="small">기술: Kotlin, Spring Boot, Asterisk, Python, Amazon Transcribe·Bedrock·Polly·SQS, AWS EC2</p>
+    <h4>배경(Why)</h4>
+    <ul>
+        <li>상용 AICC 임대료 연 수천만 원대 · 상담 내용 수기 기록 · ERP와 정보 미연동</li>
+    </ul>
+    <div class="img-placeholder">
+        <a href="resources/2026-ride-cti-1.png" data-lightbox="2026-ride-cti-1">
+            <img src="resources/2026-ride-cti-1.png" alt="AI 콜센터 전체 구성도">
+        </a>
+    </div>
+    <h4>접근(How)</h4>
+    <ul>
+        <li>Telephony(PBX) / Core / Media-Relay 3개 서버로 분리하고 Blue/Green 무중단 배포로, 배포가 통화 음질에 영향을 주지 않게 설계</li>
+        <li>상담원·고객 음성을 따로 받아 화자가 구분된 실시간 자막 제공(Transcribe)</li>
+        <li>통화 종료 시 요약 작업을 SQS에 적재해, 배포 중 끝난 통화도 요약이 누락되지 않게 처리(Bedrock)</li>
+        <li>관리자가 IVR 시나리오를 워크플로처럼 노드·연결선으로 그리는 편집기 구축, 게시 단위 버전 관리·롤백</li>
+        <li>인입번호별 IVR·센터별 큐 분배, 안내 멘트를 고치면 음성 합성(Polly)부터 배포까지 자동화</li>
+        <li>녹취·자막·요약을 모두 서울 리전에서 처리해 통화 내용이 국외로 나가지 않게 구성</li>
+        <li>통화 자막·통화 제어 버튼을 iframe SDK로 배포해 ERP 화면에 임베드</li>
+    </ul>
+    <h4>성과(Result)</h4>
+    <div class="result">
+        개발 환경에서 IVR·큐 분배·녹취·실시간 자막·자동 요약 전 구간 동작
+    </div>
+    <div class="pg-foot">
+        <div>[라이드] 실시간 AI 콜센터 및 업무 자동화</div>
+        <div class="page-num-placeholder">페이지 3 / 7</div>
+    </div>
+</section>
+<!--라이드 - 법정검사 사후정산-->
+<section class="sheet" id="Ride-Settlement" aria-label="Ride - Settlement">
+    <h3 style="margin-top: 24px;">2. 법정검사 사후정산 자동화</h3>
+    <p class="small">기간: 2026.04 ~ 2026.06</p>
+    <p class="small">기술: Kotlin, Spring Boot, Amazon Bedrock(Claude Sonnet), Android SMS 연동</p>
+    <h4>배경(Why)</h4>
+    <ul>
+        <li>비용 안내 전화 응대, 견적서 수기 판독, 엑셀로 정산 관리</li>
+    </ul>
+    <div class="img-placeholder">
+        <a href="resources/2026-ride-settlement-1.png" data-lightbox="2026-ride-settlement-1">
+            <img src="resources/2026-ride-settlement-1.png" alt="사후정산 자동화 흐름도">
+        </a>
+    </div>
+    <h4>접근(How)</h4>
+    <ul>
+        <li>비용 안내 전화 대신 정산 URL을 발송해 고객이 영수증을 직접 첨부하는 흐름으로 전환</li>
+        <li>첨부된 영수증 금액을 Bedrock으로 판독해 정산 금액과 자동 대조</li>
+        <li>은행 이체 양식 엑셀을 16진수 고유값과 함께 생성하고, 안드로이드 기기로 받은 이체 완료 SMS를 그 고유값으로 자동 매칭</li>
+    </ul>
+    <h4>성과(Result)</h4>
+    <div class="result">
+        관련 문의 전화 70% 감소 · 엑셀 수작업 제거
+    </div>
+    <div class="pg-foot">
+        <div>[라이드] 실시간 AI 콜센터 및 업무 자동화</div>
+        <div class="page-num-placeholder">페이지 3 / 7</div>
     </div>
 </section>
 
